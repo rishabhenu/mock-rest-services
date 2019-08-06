@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>MOCKSERVICES.externalpricingservices</groupId>
 	<artifactId>externalpricingservices</artifactId>
-	<version>{developmentVersion}</version>
+	<version>1.0</version>
 	<packaging>war</packaging>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
