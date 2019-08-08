@@ -8,6 +8,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import com.externalpricingservices.services.RmsPricingServiceAdaptor;
 import com.externalpricingservices.services.requests.RmsPricingRequest;
@@ -24,8 +26,8 @@ public class RMSPricingService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/pricing/{vin}")
-	public RmsPricingResponse getRmsPrices(RmsPricingRequest req, @PathParam("vin") String vin) {
+	@Path("/pricing/(.*)")
+	public Object getRmsPrices(RmsPricingRequest req, @PathParam(value = "(.*)") String vin) {
 		logger.info("-----------------------------------------------------------------------------------------------");
 		logger.info("Got pricing request for vin : "+vin);
 		RmsPricingResponse resp = rmsPricingAdaptor.getRmsPriceResponse(req, vin);
