@@ -26,8 +26,8 @@ public class RMSPricingService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/pricing/{(.*)}")
-	public Object getRmsPrices(RmsPricingRequest req, @PathParam(value = "(.*)") String vin) {
+	@Path("/pricing/{vin}")
+	public Object getRmsPrices(RmsPricingRequest req, @PathParam(value = "vin") String vin) {
 		logger.info("-----------------------------------------------------------------------------------------------");
 		logger.info("Got pricing request for vin : "+vin);
 		RmsPricingResponse resp = rmsPricingAdaptor.getRmsPriceResponse(req, vin);
