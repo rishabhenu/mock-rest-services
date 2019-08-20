@@ -8,39 +8,54 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 
 import com.externalpricingservices.services.RmsPricingServiceAdaptor;
-import com.externalpricingservices.services.requests.RmsPricingRequest;
 import com.externalpricingservices.services.responses.RmsAuthenticationResponse;
-import com.externalpricingservices.services.responses.RmsFailureResponse;
-import com.externalpricingservices.services.responses.RmsPricingResponse;
 
-@Path("rms")
+@Path("/mock/service")
 public class RMSPricingService {
 
 	private static final Logger logger = Logger.getLogger(RMSPricingService.class.getName());
 	private RmsPricingServiceAdaptor rmsPricingAdaptor;
-	
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/pricing/{vin}")
-	public Object getRmsPrices(RmsPricingRequest req, @PathParam(value = "vin") String vin) {
-		logger.info("-----------------------------------------------------------------------------------------------");
-		logger.info("Got pricing request for vin : "+vin);
-		RmsPricingResponse resp = rmsPricingAdaptor.getRmsPriceResponse(req, vin);
-		if(resp != null) {
-			logger.info("RmsPricingRequest is completed successfully for vin : "+vin+". Response is "+resp);
-			logger.info("----------------------------------------------------------------------------------------------");
+	@Path("/create/{url}")
+	public String createNewResponse(String req, @PathParam("url") String url) {
+		logger.info("-----------------------Received request to create /" + url
+				+ " service---------------------------------");
+		logger.info("Request : " + req);
+		String resp;
+		if (rmsPricingAdaptor.setResponse(url, req))
+			resp = "{\"status\" : \"success\"}";
+		else
+			resp = "{\"status\" : \"failure\"}";
+		logger.info("-------------------------------------------------------------------------------------");
+		return resp;
+	}
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/generate/{url}")
+	public String getRmsPrices(String req, @PathParam("url") String url) {
+		logger.info("-----------------------Received request to generate /" + url
+				+ " service---------------------------------");
+		String resp = null;
+		if (rmsPricingAdaptor.getResponse(url) != null) {
+			resp = (String) rmsPricingAdaptor.getResponse(url);
+			logger.info("Response is : " + resp);
+			logger.info("-----------------------Finished /" + url + " service---------------------------------");
+			return resp;
+		} else {
+			resp = "{\"status\":\"failure\",\"status-message\":\"This service is not created yet please create first\"}";
+			logger.info("Response is : " + resp);
+			logger.info("-----------------------Finished /" + url + " service---------------------------------");
 			return resp;
 		}
-		logger.severe("RmsPricingResponse is null");
-		return null;
 	}
-	
-	
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -49,7 +64,7 @@ public class RMSPricingService {
 		logger.info("-----------------------------------------------------------------------------------------------");
 		logger.info("Got authentication request");
 		RmsAuthenticationResponse resp = rmsPricingAdaptor.getAuthenticationRes();
-		logger.info("RmsAuthentication request is processed successfully. Response is "+resp);
+		logger.info("RmsAuthentication request is processed successfully. Response is " + resp);
 		logger.info("----------------------------------------------------------------------------------------------");
 		return resp;
 	}
