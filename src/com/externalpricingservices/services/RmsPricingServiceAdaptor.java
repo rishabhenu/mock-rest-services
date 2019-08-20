@@ -1,10 +1,31 @@
 package com.externalpricingservices.services;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.externalpricingservices.services.requests.RmsPricingRequest;
 import com.externalpricingservices.services.responses.RmsAuthenticationResponse;
 import com.externalpricingservices.services.responses.RmsPricingResponse;
 
 public class RmsPricingServiceAdaptor {
+	
+	private static Map<String,String> requestsResponses = new HashMap<>();
+	
+	public boolean setResponse(String request, String response) {
+		if(response == null)
+			return false;
+		try{
+			requestsResponses.put(request, response);
+			return true;
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public Object getResponse(String request) {
+		return requestsResponses.get(request);
+	}
 	
 	public RmsPricingResponse getRmsPriceResponse(RmsPricingRequest req, String vin) {
 		RmsPricingResponse resp = new RmsPricingResponse();

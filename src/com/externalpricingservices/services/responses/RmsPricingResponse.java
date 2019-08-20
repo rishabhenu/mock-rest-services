@@ -2,6 +2,8 @@ package com.externalpricingservices.services.responses;
 
 public class RmsPricingResponse {
 	
+	private int statusCode;
+	private String statusMessage;
 	private String priceType;
 	private String currency;
 	private String createdAt;
