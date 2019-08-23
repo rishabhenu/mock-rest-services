@@ -3,7 +3,7 @@
 	xmlns="http://java.sun.com/xml/ns/javaee"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
-	<display-name>externalpricingservices</display-name>
+	<display-name>mockservices</display-name>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.htm</welcome-file>
@@ -13,13 +13,21 @@
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
 
+	<servlet>
+		<servlet-name>mock-service</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>mock-service</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
 	<listener>
 		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
 	</listener>
-	<context-param>
-		<param-name>resteasy.resources</param-name>
-		<param-value>com.externalpricingservices.resources.RMSPricingService</param-value>
-	</context-param>
+	<!-- <context-param> <param-name>resteasy.resources</param-name> <param-value>com.mockservices.resources.MockServices</param-value> 
+		</context-param> -->
 
 	<listener>
 		<display-name>external-pricing-service</display-name>
@@ -27,7 +35,7 @@
 	</listener>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/config/external-pricing-service.xml</param-value>
+		<param-value>/WEB-INF/config/mock-service.xml</param-value>
 	</context-param>
 
 	<servlet>
