@@ -13,7 +13,6 @@ public class MockServicesAdaptor {
 			return false;
 		try{
 			requestsResponses.put(request, response);
-			System.out.println(requestsResponses);
 			return true;
 		}catch(Exception e) {
 			e.printStackTrace();
