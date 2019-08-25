@@ -14,42 +14,13 @@
 	</welcome-file-list>
 
 	<servlet>
-		<servlet-name>mock-service</servlet-name>
+		<servlet-name>mock</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>mock-service</servlet-name>
+		<servlet-name>mock</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-
-	<listener>
-		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
-	</listener>
-	<!-- <context-param> <param-name>resteasy.resources</param-name> <param-value>com.mockservices.resources.MockServices</param-value> 
-		</context-param> -->
-
-	<listener>
-		<display-name>external-pricing-service</display-name>
-		<listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
-	</listener>
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/config/mock-service.xml</param-value>
-	</context-param>
-
-	<servlet>
-		<servlet-name>resteasy-servlet</servlet-name>
-		<servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>resteasy-servlet</servlet-name>
-		<url-pattern>/*</url-pattern>
-	</servlet-mapping>
-	<context-param>
-		<param-name>resteasy.servlet.mapping.prefix</param-name>
-		<param-value>/rest</param-value>
-	</context-param>
-
+	
 </web-app>

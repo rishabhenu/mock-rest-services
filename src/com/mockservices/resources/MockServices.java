@@ -1,35 +1,29 @@
 package com.mockservices.resources;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.stereotype.Component;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mockservices.services.MockServicesAdaptor;
 
-@Component
-@Path("/mock/service")
+@RestController(value = "mockServices")
 public class MockServices {
 
 	private static final Logger logger = Logger.getLogger(MockServices.class.getName());
 	private MockServicesAdaptor mockServicesAdaptor;
 
-	@POST
-	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_PLAIN})
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_PLAIN})
-	@Path("/create/{url}")
-	public String createNewResponse(String req, @PathParam("url") String url) {
+	@RequestMapping(consumes = { "application/json", "application/xml", "text/plain" }, produces = { "application/json",
+			"application/xml", "text/plain" }, method = RequestMethod.POST, path = "/rest/create/{url}")
+	public @ResponseBody String createNewResponse(@RequestBody String req, @PathVariable(value = "url") String url) {
 		logger.info("-----------------------Received request to create /" + url
 				+ " service---------------------------------");
 		logger.info("Request : " + req);
@@ -42,12 +36,10 @@ public class MockServices {
 		return resp;
 	}
 
-	@POST
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_PLAIN})
-	@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_PLAIN})
-	@Path("/generate/{url}")
-	public String getRmsPrices(String req, @PathParam("url") String url) {
-		
+	@RequestMapping(consumes = { "application/json", "application/xml", "text/plain" }, produces = { "application/json",
+			"application/xml", "text/plain" }, method = RequestMethod.POST, path = "/rest/generate/{url}")
+	public @ResponseBody String getResponse(@RequestBody String req, @PathVariable(value = "url") String url) {
+
 		logger.info("-----------------------Received request to generate /" + url
 				+ " service---------------------------------");
 		String resp = null;
@@ -63,29 +55,34 @@ public class MockServices {
 			return resp;
 		}
 	}
-	
-	@GET
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_PLAIN})
-	@Path("/get-all/services")
-	public Object getAllServices(){
-		Map<String,Object> map = new HashMap<>();
-		if(mockServicesAdaptor.getAllServices() == null || mockServicesAdaptor.getAllServices().size()==0) {
+
+	@RequestMapping(consumes = { "application/json", "application/xml", "text/plain" }, produces = { "application/json",
+			"application/xml", "text/plain" }, method = RequestMethod.POST, path = "/rest/generate/{url}/{vin}")
+	public String getRmsPricingResponse(String req, @PathVariable(value = "url") String url) {
+		return getResponse(req, url);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, path = "/get-all-services", produces = { "application/json" })
+	public @ResponseBody String getAllServices() throws JsonProcessingException {
+		Map<String, Object> map = new HashMap<>();
+		if (mockServicesAdaptor.getAllServices() == null || mockServicesAdaptor.getAllServices().size() == 0) {
+			ObjectMapper mapper = new ObjectMapper();
 			map.put("status", "success");
 			map.put("message", "No any service created as of now");
-		}else {
-			List<Map<String,Object>> services = new ArrayList<>();
-			int index = 1;
-			for(String s : mockServicesAdaptor.getAllServices()) {
-				Map<String,Object> tempMap = new HashMap<String, Object>();
-				tempMap.put(index+"", s);
-				services.add(tempMap);
+			return mapper.writeValueAsString(map);
+		} else {
+			String response = "{\"status\" : \"success\"," + "\"services\":[";
+			Map<String, String> allServices = mockServicesAdaptor.getAllServices();
+			int index = 0;
+			for (String service : allServices.keySet()) {
+				if (index != 0)
+					response += ",";
+				response += "{\"" + service + "\":" + allServices.get(service) + "}";
 				index++;
 			}
-			map.put("services", services);
-			map.put("status", "success");
-			return map;
+			response += "]}";
+			return response;
 		}
-		return map;
 	}
 
 	public void setMockServicesAdaptor(MockServicesAdaptor mockServicesAdaptor) {
