@@ -19,20 +19,6 @@
 		<a v-bind:href='link'>Home Page</a>
 		<div @click='getUrl'>{getUrl}</div>
 	</div>
-	<script type="text/javascript" src="${context}/resources/js/main.js">
-		new Vue({
-			el : '#app',
-			data : {
-				name : "Rishabh Sharma",
-				link : "${context}/get-all-services",
-				url : ''
-			},
-			methods :{
-				getUrl : function(){
-					return location.host+'/'+this.link;
-				}
-			}
-		});
-	</script>
+	<script type="text/javascript" src="${context}/resources/js/main.js" />
 </body>
 </html>
