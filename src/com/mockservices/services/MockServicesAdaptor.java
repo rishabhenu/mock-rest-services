@@ -13,6 +13,7 @@ public class MockServicesAdaptor {
 			return false;
 		try{
 			requestsResponses.put(request, response);
+			System.out.println(requestsResponses);
 			return true;
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -24,7 +25,7 @@ public class MockServicesAdaptor {
 		return requestsResponses.get(request);
 	}
 	
-	public Set<String> getAllServices() {
-		return requestsResponses.keySet();
+	public Map<String, String> getAllServices() {
+		return requestsResponses;
 	}
 }
