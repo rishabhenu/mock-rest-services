@@ -1,0 +1,38 @@
+@charset "ISO-8859-1";
+
+div {
+	margin: 10px auto;
+}
+
+.info-text-area{
+	overflow: auto;
+	background-color: #eff0f1;
+	border-radius: 10px;
+	padding-left: 20px;
+}
+.heading{
+	margin: auto;
+	background: #92b768;
+	text-align: center;
+	color: #3042ca;
+	font-family: Algerian;
+	border-radius: 15px;
+}
+
+@media all and (min-width : 500px) {
+	.info-text-area.device{
+		max-height: 500px;
+	}
+	.heading.device {
+		font-size: 30px;
+	}
+}
+
+@media all and (max-width : 500px) {
+	.info-text-area.device{
+		max-height: 300px;
+	}
+	.heading.device {
+		font-size: 20px;
+	}
+}

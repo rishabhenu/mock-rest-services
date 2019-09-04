@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
 
 	<bean id="jspViewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -15,22 +15,33 @@
 
 	<context:annotation-config />
 	<context:component-scan
-		base-package="com.mockservices.controllers">
+		base-package="com.mockservices.resources">
 	</context:component-scan>
+	
+	<!-- <bean id="propertyConfigurerBase"  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<set  merge="true">
+				<value>/resources/mock.properties</value>					
+			</set>
+		</property>
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="order" value="0" />
+	</bean>-->
+	
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename" value="mock-services" />
+    </bean>
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+        <property name="defaultLocale" value="en" />
+    </bean>
 
 	<bean id="mockServicesMainController"
 		class="com.mockservices.controllers.MockServicesMainController" />
 
 	<bean id="mockServicesAdaptor"
 		class="com.mockservices.services.MockServicesAdaptor" />
-
-	<bean id="mockServices"
-		class="com.mockservices.resources.MockServices">
-		<property name="mockServicesAdaptor"
-			ref="mockServicesAdaptor">
-		</property>
-	</bean>
+		
 	<mvc:annotation-driven />
-	<mvc:resources location="/resources/"
+	<mvc:resources location="/WEB-INF/resources/"
 		mapping="/resources/**"></mvc:resources>
 </beans>
