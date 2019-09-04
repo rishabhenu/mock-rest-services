@@ -2,17 +2,24 @@ package com.mockservices.services;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class MockServicesAdaptor {
 	
-	private static Map<String,String> requestsResponses = new HashMap<>();
+	private static Map<String,String> requestsResponsesGET = new HashMap<>();
+	private static Map<String,String> requestsResponsesPOST = new HashMap<>();
 	
-	public boolean setResponse(String request, String response) {
+	public boolean setResponse(String request, String response, String method) {
 		if(response == null)
 			return false;
 		try{
-			requestsResponses.put(request, response);
+			switch(method) {
+			case "POST":
+				requestsResponsesPOST.put(request, response);
+				break;
+			case "GET":
+				requestsResponsesGET.put(request, response);
+				break;
+			}
 			return true;
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -20,11 +27,33 @@ public class MockServicesAdaptor {
 		return false;
 	}
 	
-	public Object getResponse(String request) {
-		return requestsResponses.get(request);
+	public Object getResponse(String request, String method) {
+		switch(method) {
+		case "POST":
+			return requestsResponsesPOST.get(request);
+		case "GET":
+			return requestsResponsesGET.get(request);
+		}
+		return "\"status\":\"failure\",\"message\":\"No method found\"";
 	}
 	
 	public Map<String, String> getAllServices() {
-		return requestsResponses;
+		return requestsResponsesPOST;
+	}
+	
+	public boolean deleteService(String url, String method) {
+		try{
+			switch(method) {
+			case "POST":
+				requestsResponsesPOST.remove(url);
+				break;
+			case "GET":
+				requestsResponsesGET.remove(url);
+				break;
+			}
+			return true;
+		}catch(Exception e) {
+			throw e;
+		}
 	}
 }

@@ -1,24 +1,33 @@
+<%@ page import="java.util.ResourceBundle"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="ISO-8859-1">
 <title>Mock Services</title>
 <link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-	crossorigin="anonymous">
-<script src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
-<c:set var="context" value="${pageContext.request.contextPath}"></c:set>
+	href="${context}/resources/styling/bootstrap-grid.min.css" type="text/css">
+<link rel="stylesheet" type="text/css"
+	href="${context}/resources/styling/mock-services.css">
+<script src="${context}/resources/js/vue.js"></script>
 </head>
 <body>
-	<div id="app">
-		<div>{{name}}</div>
-		<a v-bind:href='link'>Home Page</a>
-		<div @click='getUrl'>{getUrl}</div>
+	<div id="app" class="container">
+		<div class="row" v-once>
+			<div class="col-sm-12 heading device"><fmt:message key="greet"/></div>
+		</div>
+		<div class="row info-text-area device" style="font-family: 'Courier New', Courier, monospace;">
+			<div class="col-12"><strong>Steps To Use :-</strong></div>
+			<div class="col-12">
+				<fmt:message key="steps.to.use"><fmt:param>${baseUrl}</fmt:param></fmt:message>
+			</div>
+		</div>
 	</div>
-	<script type="text/javascript" src="${context}/resources/js/main.js" />
+	<script src="${context}/resources/js/main.js">
+		
+	</script>
 </body>
 </html>
