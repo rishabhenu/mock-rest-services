@@ -1,6 +1,5 @@
 package com.mockservices.resources;
 
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -24,7 +23,7 @@ public class MockServicesDelete {
 	private MockServicesAdaptor mockServicesAdaptor;
 	
 	@RequestMapping(method = RequestMethod.DELETE, path = "/{url}", produces = "application/json")
-	public String deleteMockService(@PathVariable("url") String url, HttpServletRequest request) {
+	public @ResponseBody String deleteMockService(@PathVariable("url") String url, HttpServletRequest request) {
 		logger.info("---------------------- Got request to delete /" + url
 				+ " service. --------------------------------------");
 		String response = "";

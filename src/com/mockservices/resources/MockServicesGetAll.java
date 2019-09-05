@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mockservices.resources.AbstractMockServices.Constants.HTTP_METHOD_TYPE_STRING;
@@ -25,7 +26,7 @@ public class MockServicesGetAll extends AbstractMockServices {
 	private MockServicesAdaptor mockServicesAdaptor;
 
 	@RequestMapping(method = RequestMethod.GET, produces = { "application/json" })
-	public ResponseEntity<List<Object>> getAllServices() {
+	public @ResponseBody ResponseEntity<List<Object>> getAllServices() {
 		MultiValueMap<String, String> headers = new HttpHeaders();
 		List<Object> response = new ArrayList<Object>();
 

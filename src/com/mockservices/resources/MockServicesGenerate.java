@@ -11,13 +11,14 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mockservices.services.MockServicesAdaptor;
 
 @RestController
 @RequestMapping(path = "/rest/generate")
-public class MockServicesGenerate {
+public class MockServicesGenerate extends AbstractMockServices {
 
 	private static final Logger logger = LoggerFactory.getLogger(MockServicesGenerate.class.getName());
 	
@@ -64,7 +65,7 @@ public class MockServicesGenerate {
 				method = {RequestMethod.POST, RequestMethod.GET}, 
 				path = {"/{url}", "/{url}/{vin}"}
 			)
-	public ResponseEntity<String> getMockResponseGET(RequestEntity<String> request, @PathVariable(value = "url") String url) {
+	public @ResponseBody ResponseEntity<String> getMockResponse(RequestEntity<String> request, @PathVariable(value = "url") String url) {
 		
 		String method = request.getMethod().toString().toUpperCase();
 		logger.info("-----------------------Received request to generate /" + url + " service. Method : " + method
@@ -79,7 +80,9 @@ public class MockServicesGenerate {
 			logger.info("Response is : " + resp);
 			logger.info("-----------------------Finished /" + url + " service---------------------------------");
 		}
-		return new ResponseEntity<String>(resp, setContentType(resp), HttpStatus.OK);
+		MultiValueMap<String, String> headers = new HttpHeaders();
+		headers.add("Content-Type", getContentType(resp));
+		return new ResponseEntity<String>(resp, headers, HttpStatus.OK);
 	}
 
 //	@RequestMapping(
@@ -91,15 +94,15 @@ public class MockServicesGenerate {
 //		return getMockResponseGET(url, request, response);
 //	}
 	
-	private MultiValueMap<String,String> setContentType(String resp) {
-		MultiValueMap<String, String> headers = new HttpHeaders();
-		if(resp != null && !resp.isEmpty()) {
-			if(resp.trim().charAt(0) == '{' && resp.trim().charAt(resp.trim().length()-1) == '}') {
-				headers.add("Content-Type", "application/json");
-			}else if(resp.trim().charAt(0) == '<' && resp.trim().charAt(resp.trim().length()-1) == '>') {
-				headers.add("Content-Type", "application/xml");
-			}
-		}
-		return headers;
-	}
+//	private MultiValueMap<String,String> setContentType(String resp) {
+//		MultiValueMap<String, String> headers = new HttpHeaders();
+//		if(resp != null && !resp.isEmpty()) {
+//			if(resp.trim().charAt(0) == '{' && resp.trim().charAt(resp.trim().length()-1) == '}') {
+//				headers.add("Content-Type", "application/json");
+//			}else if(resp.trim().charAt(0) == '<' && resp.trim().charAt(resp.trim().length()-1) == '>') {
+//				headers.add("Content-Type", "application/xml");
+//			}
+//		}
+//		return headers;
+//	}
 }
