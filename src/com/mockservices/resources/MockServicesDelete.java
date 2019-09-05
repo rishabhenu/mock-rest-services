@@ -39,7 +39,8 @@ public class MockServicesDelete {
 			logger.info("------------------------ Deleted successfully ------------------------------");
 		} catch (Exception e) {
 			response = "{\"status\":\"failure\",\"msg\":\"" + e.getMessage() + "\"}";
-			logger.info("------------------ Couldn't delete ------------------- " + e);
+			logger.info("------------------ Couldn't delete. Reason : "+ e.getMessage()+ "------------------- ");
+			e.printStackTrace();
 		}
 		return response;
 	}
