@@ -62,10 +62,11 @@ public class MockServicesGenerate extends AbstractMockServices {
 
 	@RequestMapping(
 				consumes = { "application/json", "application/xml", "text/plain", "text/html;charset=UTF-8" }, 
+				produces = { "application/json", "application/xml", "text/plain", "text/html;charset=UTF-8" },
 				method = {RequestMethod.POST, RequestMethod.GET}, 
 				path = {"/{url}", "/{url}/{vin}"}
 			)
-	public @ResponseBody ResponseEntity<String> getMockResponse(RequestEntity<String> request, @PathVariable(value = "url") String url) {
+	public @ResponseBody ResponseEntity<Object> getMockResponse(RequestEntity<String> request, @PathVariable(value = "url") String url) {
 		
 		String method = request.getMethod().toString().toUpperCase();
 		logger.info("-----------------------Received request to generate /" + url + " service. Method : " + method
@@ -82,7 +83,7 @@ public class MockServicesGenerate extends AbstractMockServices {
 		}
 		MultiValueMap<String, String> headers = new HttpHeaders();
 		headers.add("Content-Type", getContentType(resp));
-		return new ResponseEntity<String>(resp, headers, HttpStatus.OK);
+		return new ResponseEntity<Object>(resp, headers, HttpStatus.OK);
 	}
 
 //	@RequestMapping(
