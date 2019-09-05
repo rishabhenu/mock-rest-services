@@ -44,24 +44,4 @@ public class MockServicesDelete {
 		}
 		return response;
 	}
-
-	@RequestMapping(method = RequestMethod.GET, path = "/get-all-services")
-	public @ResponseBody String getAllServices() {
-		if (mockServicesAdaptor.getAllServices() == null || mockServicesAdaptor.getAllServices().size() == 0) {
-			return "{\"status\":\"success\",\"message\":\"No any service created as of now\"}";
-		} else {
-			String response = "{\"status\" : \"success\"," + "\"services\":[";
-			Map<String, String> allServices = mockServicesAdaptor.getAllServices();
-			int index = 0;
-			for (String service : allServices.keySet()) {
-				if (index != 0)
-					response += ",";
-				response += "{\"" + service + "\":" + allServices.get(service) + "}";
-				index++;
-			}
-			response += "]}";
-			return response;
-		}
-	}
-
 }

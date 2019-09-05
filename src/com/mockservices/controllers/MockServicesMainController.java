@@ -12,9 +12,16 @@ public class MockServicesMainController {
 	@RequestMapping("/")
 	public String getHome(HttpServletRequest request, HttpServletResponse response) {
 		String sb = (request.getRequestURL()).substring(0, (request.getRequestURL().length()-request.getRequestURI().length()));
+		
 		String context = request.getContextPath();
 		request.setAttribute("baseUrl", sb.toString()+context);
 		request.setAttribute("context", context);
 		return "index";
+	}
+	
+	private boolean isLocalHost(String url) {
+		String regex = "(.*)([a-zA-Z])(:)([0-9]+)";
+		boolean b = url.matches(regex);
+		return b;
 	}
 }

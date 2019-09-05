@@ -100,6 +100,6 @@ public class MockServicesGenerate {
 				headers.add("Content-Type", "application/xml");
 			}
 		}
-		return (MultiValueMap<String,String>)headers;
+		return headers;
 	}
 }
