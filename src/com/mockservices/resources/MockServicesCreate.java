@@ -8,10 +8,13 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,26 +34,30 @@ public class MockServicesCreate extends AbstractMockServices {
 	@RequestMapping(
 			consumes = { "application/json", "application/xml", "text/plain" }, 
 			produces = { "application/json" }, 
-			method = RequestMethod.POST, 
+			method = RequestMethod.POST,
 			path = {"/{url}", "/{url}/{url1}"}
 		)
-	public ResponseEntity<Object> createMockService(RequestEntity<String> request, @PathVariable(value = "url") String url) {
+	public 
+	@ResponseBody 
+	ResponseEntity<Object> createMockService( @RequestBody(required = true) RequestEntity<String> request, 
+																	@PathVariable(value = "url") String url) {
 		logger.info("----------------------- Received request to create /" + url
 				+ " service. ---------------------------------");
 		System.out.println(request.getUrl());
 		System.out.println("Host : "+request.getUrl().getHost());
 		Map<String, Object> response = new HashMap<>();
+		MultiValueMap<String, String> headers = new HttpHeaders();
+		headers.add("content-type", Constants.CONTENT_TYPE.JSON.stringValue());
 		
 		List<String> headerList = request.getHeaders().get("Method-Name");
 		if(headerList == null || headerList.isEmpty()) {
 			response.put("status", "failure");
 			response.put("message", "Header 'Method-Name' not found");
-			return new ResponseEntity<Object>(response, HttpStatus.OK);
+			return new ResponseEntity<Object>(response, headers, HttpStatus.OK);
 		}
 		String method = headerList.get(0).toUpperCase();
 		String req = request.getBody();
 		logger.info("Method : " + method +", Request : " + req);
-		String resp;
 		if (mockServicesAdaptor.setResponse(url, req, method)) {
 			response.put("status", "success");
 			
@@ -64,7 +71,8 @@ public class MockServicesCreate extends AbstractMockServices {
 		else
 			response.put("status", "failure");
 		logger.info("-------------------------------------------------------------------------------------");
-		return new ResponseEntity<Object>(response, HttpStatus.OK);
+		
+		return new ResponseEntity<Object>(response, headers, HttpStatus.OK);
 	}
 	
 }
