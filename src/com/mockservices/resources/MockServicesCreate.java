@@ -1,12 +1,16 @@
 package com.mockservices.resources;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,7 +21,7 @@ import com.mockservices.services.MockServicesAdaptor;
 
 @RestController
 @RequestMapping(path = "/rest/create")
-public class MockServicesCreate {
+public class MockServicesCreate extends AbstractMockServices {
 
 	private static final Logger logger = LoggerFactory.getLogger(MockServicesCreate.class.getName());
 	
@@ -30,23 +34,37 @@ public class MockServicesCreate {
 			method = RequestMethod.POST, 
 			path = {"/{url}", "/{url}/{url1}"}
 		)
-	public @ResponseBody String createMockService(RequestEntity<String> request, @PathVariable(value = "url") String url) {
+	public ResponseEntity<Object> createMockService(RequestEntity<String> request, @PathVariable(value = "url") String url) {
+		logger.info("----------------------- Received request to create /" + url
+				+ " service. ---------------------------------");
+		System.out.println(request.getUrl());
+		System.out.println("Host : "+request.getUrl().getHost());
+		Map<String, Object> response = new HashMap<>();
+		
 		List<String> headerList = request.getHeaders().get("Method-Name");
 		if(headerList == null || headerList.isEmpty()) {
-			return "{\"status\" : \"failure\", \"message\" : \"Header 'Method-Name' not found\"}";
+			response.put("status", "failure");
+			response.put("message", "Header 'Method-Name' not found");
+			return new ResponseEntity<Object>(response, HttpStatus.OK);
 		}
 		String method = headerList.get(0).toUpperCase();
 		String req = request.getBody();
-		logger.info("-----------------------Received request to create /" + url
-				+ " service. Method : "+method+" ---------------------------------");
-		logger.info("Request : " + req);
+		logger.info("Method : " + method +", Request : " + req);
 		String resp;
-		if (mockServicesAdaptor.setResponse(url, req, method))
-			resp = "{\"status\" : \"success\"}";
+		if (mockServicesAdaptor.setResponse(url, req, method)) {
+			response.put("status", "success");
+			
+			Map<String, String> service = new HashMap<String, String>();
+			service.put("method", method);
+			service.put("contentType", getContentType(req));
+			service.put("url", request.getUrl().toString().replace("/rest/create/", "/rest/generate/"));
+			
+			response.put("service", service);
+		}
 		else
-			resp = "{\"status\" : \"failure\"}";
+			response.put("status", "failure");
 		logger.info("-------------------------------------------------------------------------------------");
-		return resp;
+		return new ResponseEntity<Object>(response, HttpStatus.OK);
 	}
 	
 }

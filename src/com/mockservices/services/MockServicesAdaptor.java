@@ -2,11 +2,14 @@ package com.mockservices.services;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
-public class MockServicesAdaptor {
+import com.mockservices.resources.AbstractMockServices;
+
+public class MockServicesAdaptor extends AbstractMockServices {
 	
-	private static Map<String,String> requestsResponsesGET = new HashMap<>();
-	private static Map<String,String> requestsResponsesPOST = new HashMap<>();
+	private static Map<String,String> requestsResponsesGET = new TreeMap<>();
+	private static Map<String,String> requestsResponsesPOST = new TreeMap<>();
 	
 	public boolean setResponse(String request, String response, String method) {
 		if(response == null)
@@ -37,8 +40,11 @@ public class MockServicesAdaptor {
 		return "\"status\":\"failure\",\"message\":\"No method found\"";
 	}
 	
-	public Map<String, String> getAllServices() {
-		return requestsResponsesPOST;
+	public Map<String, Map<String,String>> getAllServices() {
+		Map<String, Map<String,String>> allServices = new HashMap<>();
+		allServices.put(Constants.HTTP_METHOD_TYPE_STRING.GET.toString(), requestsResponsesGET);
+		allServices.put(Constants.HTTP_METHOD_TYPE_STRING.POST.toString(), requestsResponsesPOST);
+		return allServices;
 	}
 	
 	public boolean deleteService(String url, String method) throws Exception {
