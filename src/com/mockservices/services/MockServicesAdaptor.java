@@ -41,15 +41,21 @@ public class MockServicesAdaptor {
 		return requestsResponsesPOST;
 	}
 	
-	public boolean deleteService(String url, String method) {
+	public boolean deleteService(String url, String method) throws Exception {
 		try{
+			String value = null;
 			switch(method) {
 			case "POST":
-				requestsResponsesPOST.remove(url);
+				value = requestsResponsesPOST.remove(url);
 				break;
 			case "GET":
-				requestsResponsesGET.remove(url);
+				value = requestsResponsesGET.remove(url);
 				break;
+				default:
+					throw new Exception("Method not allowed");
+			}
+			if(value == null) {
+				throw new Exception("No service exists");
 			}
 			return true;
 		}catch(Exception e) {
