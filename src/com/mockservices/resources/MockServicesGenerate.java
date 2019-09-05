@@ -2,16 +2,15 @@ package com.mockservices.resources;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mockservices.services.MockServicesAdaptor;
@@ -21,20 +20,57 @@ import com.mockservices.services.MockServicesAdaptor;
 public class MockServicesGenerate {
 
 	private static final Logger logger = LoggerFactory.getLogger(MockServicesGenerate.class.getName());
-
+	
 	@Autowired
 	private MockServicesAdaptor mockServicesAdaptor;
 
-	@RequestMapping(consumes = { "application/json", "application/xml",
-			"text/plain" }, method = RequestMethod.POST, path = "/{url}")
-	public @ResponseBody String getMockResponsePOST(@RequestBody String req, @PathVariable(value = "url") String url,
-			HttpServletRequest request, HttpServletResponse response) {
+//	@RequestMapping(
+//				consumes = { "application/json", "application/xml", "text/plain" }, 
+//				method = RequestMethod.POST, 
+//				path = {"/{url}", "/{url}/{vin}"}
+//			)
+//	public ResponseEntity<String> getMockResponsePOST(@RequestBody String req, @PathVariable(value = "url") String url,
+//			HttpServletRequest request, HttpServletResponse response) {
+//		
+//		String method = request.getMethod().toUpperCase();
+//		logger.info("-----------------------Received request to generate /" + url + " service. Method : " + method
+//				+ " ---------------------------------");
+//		String resp = null;
+//		if (mockServicesAdaptor.getResponse(url, request.getMethod().toUpperCase()) != null) {
+//			resp = (String) mockServicesAdaptor.getResponse(url, method);
+//			logger.info("Response is : " + resp);
+//			logger.info("-----------------------Finished /" + url + " service---------------------------------");
+//		} else {
+//			resp = "{\"status\":\"failure\",\"status-message\":\"This service is not created yet please create first\"}";
+//			logger.info("Response is : " + resp);
+//			logger.info("-----------------------Finished /" + url + " service---------------------------------");
+//		}
+//		
+//		return new ResponseEntity<String>(resp, setContentType(resp), HttpStatus.OK);
+//	}
 
-		String method = request.getMethod().toUpperCase();
+//	@RequestMapping(
+//				consumes = { "application/json", "application/xml", "text/plain" }, 
+//				method = RequestMethod.POST, 
+//				path = "/{url}/{vin}"
+//			)
+//	public ResponseEntity<String> getResponseWithTwoParamsPOST(@RequestBody String req, @PathVariable(value = "url") String url,
+//			HttpServletRequest request, HttpServletResponse response) {
+//		return getMockResponsePOST(req, url, request, response);
+//	}
+
+	@RequestMapping(
+				consumes = { "application/json", "application/xml", "text/plain", "text/html;charset=UTF-8" }, 
+				method = {RequestMethod.POST, RequestMethod.GET}, 
+				path = {"/{url}", "/{url}/{vin}"}
+			)
+	public ResponseEntity<String> getMockResponseGET(RequestEntity<String> request, @PathVariable(value = "url") String url) {
+		
+		String method = request.getMethod().toString().toUpperCase();
 		logger.info("-----------------------Received request to generate /" + url + " service. Method : " + method
 				+ " ---------------------------------");
 		String resp = null;
-		if (mockServicesAdaptor.getResponse(url, request.getMethod().toUpperCase()) != null) {
+		if (mockServicesAdaptor.getResponse(url, method) != null) {
 			resp = (String) mockServicesAdaptor.getResponse(url, method);
 			logger.info("Response is : " + resp);
 			logger.info("-----------------------Finished /" + url + " service---------------------------------");
@@ -43,51 +79,27 @@ public class MockServicesGenerate {
 			logger.info("Response is : " + resp);
 			logger.info("-----------------------Finished /" + url + " service---------------------------------");
 		}
-		setContentType(response, resp);
-		return resp;
+		return new ResponseEntity<String>(resp, setContentType(resp), HttpStatus.OK);
 	}
 
-	@RequestMapping(consumes = { "application/json", "application/xml",
-			"text/plain" }, method = RequestMethod.POST, path = "/{url}/{vin}")
-	public @ResponseBody String getResponseWithTwoParamsPOST(String req, @PathVariable(value = "url") String url,
-			HttpServletRequest request, HttpServletResponse response) {
-		return getMockResponsePOST(req, url, request, response);
-	}
-
-	@RequestMapping(method = RequestMethod.GET, path = "/{url}")
-	public @ResponseBody String getMockResponseGET( @PathVariable(value = "url") String url,
-			HttpServletRequest request, HttpServletResponse response) {
-
-		String method = request.getMethod().toUpperCase();
-		logger.info("-----------------------Received request to generate /" + url + " service. Method : " + method
-				+ " ---------------------------------");
-		String resp = null;
-		if (mockServicesAdaptor.getResponse(url, request.getMethod().toUpperCase()) != null) {
-			resp = (String) mockServicesAdaptor.getResponse(url, method);
-			logger.info("Response is : " + resp);
-			logger.info("-----------------------Finished /" + url + " service---------------------------------");
-		} else {
-			resp = "{\"status\":\"failure\",\"status-message\":\"This service is not created yet please create first\"}";
-			logger.info("Response is : " + resp);
-			logger.info("-----------------------Finished /" + url + " service---------------------------------");
-		}
-		setContentType(response, resp);
-		return resp;
-	}
-
-	@RequestMapping(method = RequestMethod.GET, path = "/{url}/{vin}")
-	public @ResponseBody String getResponseWithTwoParamsGET(@PathVariable(value = "url") String url,
-			HttpServletRequest request, HttpServletResponse response) {
-		return getMockResponseGET(url, request, response);
-	}
+//	@RequestMapping(
+//				method = RequestMethod.GET, 
+//				path = "/{url}/{vin}"
+//			)
+//	public ResponseEntity<String> getResponseWithTwoParamsGET(@PathVariable(value = "url") String url,
+//			HttpServletRequest request, HttpServletResponse response) {
+//		return getMockResponseGET(url, request, response);
+//	}
 	
-	private void setContentType(HttpServletResponse response, String resp) {
+	private MultiValueMap<String,String> setContentType(String resp) {
+		MultiValueMap<String, String> headers = new HttpHeaders();
 		if(resp != null && !resp.isEmpty()) {
 			if(resp.trim().charAt(0) == '{' && resp.trim().charAt(resp.trim().length()-1) == '}') {
-				response.setContentType("application/json");
+				headers.add("Content-Type", "application/json");
 			}else if(resp.trim().charAt(0) == '<' && resp.trim().charAt(resp.trim().length()-1) == '>') {
-				response.setContentType("application/xml");
+				headers.add("Content-Type", "application/xml");
 			}
 		}
+		return (MultiValueMap<String,String>)headers;
 	}
 }
