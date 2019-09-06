@@ -37,9 +37,7 @@ public class MockServicesCreate extends AbstractMockServices {
 			method = RequestMethod.POST,
 			path = {"/{url}", "/{url}/{url1}"}
 		)
-	public 
-	@ResponseBody 
-	ResponseEntity<Object> createMockService( @RequestBody(required = true) RequestEntity<String> request, 
+	public @ResponseBody ResponseEntity<Object> createMockService(RequestEntity<String> request, 
 																	@PathVariable(value = "url") String url) {
 		logger.info("----------------------- Received request to create /" + url
 				+ " service. ---------------------------------");
