@@ -25,10 +25,11 @@ public class MockServicesGetAll extends AbstractMockServices {
 	@Autowired
 	private MockServicesAdaptor mockServicesAdaptor;
 
-	@RequestMapping(method = RequestMethod.GET, produces = { "application/json" })
-	public @ResponseBody ResponseEntity<List<Object>> getAllServices() {
+	@RequestMapping(method = { RequestMethod.GET }, produces = { "application/json" })
+	public @ResponseBody ResponseEntity<Map<String, Object>> getAllServices() {
 		MultiValueMap<String, String> headers = new HttpHeaders();
-		List<Object> response = new ArrayList<Object>();
+		headers.add("Access-Control-Allow-Origin", "*");
+		Map<String, Object> response = new HashMap<String, Object>();
 
 		Map<String, Map<String, String>> allServices = mockServicesAdaptor.getAllServices();
 		for (HTTP_METHOD_TYPE_STRING method : HTTP_METHOD_TYPE_STRING.values()) {
@@ -43,11 +44,9 @@ public class MockServicesGetAll extends AbstractMockServices {
 				
 				methodWiseAllServicesList.add(serviceNameContentTypeMap);
 			}
-			Map<String, Object> methodNameAndServiceMap = new HashMap<String, Object>();
-			methodNameAndServiceMap.put(method.stringValue(), methodWiseAllServicesList);
-			response.add(methodNameAndServiceMap);
+			response.put(method.stringValue(), methodWiseAllServicesList);
 		}
 
-		return new ResponseEntity<List<Object>>(response, headers, HttpStatus.OK);
+		return new ResponseEntity<Map<String, Object>>(response, headers, HttpStatus.OK);
 	}
 }
