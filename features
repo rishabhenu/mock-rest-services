@@ -1,0 +1,9 @@
+MockServices v-1.0 Features: -
+1.  Instructions about how to use are available.
+2.  You can create services using postman only.
+3.  These services are accessible from Backend code only, not from UI because cross origin is not supported.
+4.  A list of all the available serivces is provided under a link which is available on the page opened at step 1.
+5.  You can create service with POST or GET method only.
+6.  Content-Type supported are XML, JSON, text/plain.
+7.  Any service can be deleted with delete method provided description in instructions page.
+8.  Only one path appending is allowed i.e. after fixed URL only one path can be appended.
