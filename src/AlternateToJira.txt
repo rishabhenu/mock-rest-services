@@ -1,0 +1,2 @@
+Release : 1.1
+JIRA-1 :-	Create a separate Java Class to handle all kind of requests and responses. Also add Response code and Time delay, Content-Type functionality.

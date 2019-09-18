@@ -1,6 +1,48 @@
 @charset "ISO-8859-1";
 
-div {
+body{
+	/* background-image: linear-gradient(to right, #ecd1ec, #b681dd, #b2b2f0, #98f098, #f9f95b, #f2bb55, #ec9595); */
+	background-image: linear-gradient(to right, #ecd1ec, white);
+	color: black !important;
+	font-family: 'Quicksand', sans-serif;
+}
+
+.servicesList:hover {
+	background: #ffffff;
+}
+.child-servicesList {
+	display: none;
+}
+.servicesList:hover .child-servicesList {
+	display: block;
+}
+
+button{
+	padding: 10px 10px;
+    margin: 10px 10px;
+    min-width: 100px;
+	cursor: pointer;
+	color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+	text-align: center;
+	border: 1px solid transparent;
+	border-radius: .25rem;
+}
+
+input, select, option, textarea{
+	background-image: linear-gradient(to left, #bbf4bb, lightblue, lightgray);
+	color: darkblue;
+	font-family: 'Quicksand', sans-serif;
+	border-radius: 10px;
+	padding-left: 10px;
+	min-height: 27px;
+}
+.input-body{
+	min-height: 300px;
+	max-height: 500px;
+}
+.clear {
 	margin: 10px auto;
 }
 
@@ -12,10 +54,8 @@ div {
 }
 .heading{
 	margin: auto;
-	background: #92b768;
 	text-align: center;
 	color: #3042ca;
-	font-family: Algerian;
 	border-radius: 15px;
 }
 

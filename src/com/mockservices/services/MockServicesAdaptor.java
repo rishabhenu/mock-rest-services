@@ -1,71 +1,80 @@
 package com.mockservices.services;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.mockservices.resources.AbstractMockServices;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 
-public class MockServicesAdaptor extends AbstractMockServices {
+import com.mockservices.req_resp.MockServiceRequest;
+import com.mockservices.req_resp.MockServiceResponse;
+
+@Component("mockServicesAdaptor")
+public class MockServicesAdaptor extends AbstractServiceAdaptor {
 	
-	private static Map<String,String> requestsResponsesGET = new TreeMap<>();
-	private static Map<String,String> requestsResponsesPOST = new TreeMap<>();
+	public static Map<String, MockServiceRequest> requestsResponsesPOST = new TreeMap<>();
+	public static Map<String, MockServiceRequest> requestsResponsesGET = new TreeMap<>();
 	
-	public boolean setResponse(String request, String response, String method) {
-		if(response == null)
-			return false;
-		try{
+	private static Map<String, Object> allServices = new TreeMap<String, Object>();
+	public ResponseEntity<MockServiceResponse> addService(String servicePath, MockServiceRequest request) {
+		MockServiceResponse response = null;
+		HttpStatus status = null;
+		try {
+			Map<String, String> service = new HashMap<String, String>();
+			service.put("", "");
+			allServices.put(servicePath, request);
+			response = MockServiceResponse.getSuccessfulInstance("Service Created Successfully", service);
+		}catch(Exception e) {
+		}
+		return new ResponseEntity<MockServiceResponse>(response, status);
+	}
+	
+	public boolean setResponse(String path, MockServiceRequest request) {
+		try {
+			String method = request.getHeaders().getMethod();
 			switch(method) {
-			case "POST":
-				requestsResponsesPOST.put(request, response);
-				break;
 			case "GET":
-				requestsResponsesGET.put(request, response);
+				requestsResponsesGET.put(path, request);
+				break;
+			case "POST":
+				requestsResponsesPOST.put(path, request);
 				break;
 			}
 			return true;
 		}catch(Exception e) {
-			e.printStackTrace();
+			return false;
 		}
-		return false;
 	}
 	
-	public Object getResponse(String request, String method) {
+	public MockServiceRequest getResponse(String request, String method) {
 		switch(method) {
 		case "POST":
 			return requestsResponsesPOST.get(request);
 		case "GET":
 			return requestsResponsesGET.get(request);
 		}
-		return "\"status\":\"failure\",\"message\":\"No method found\"";
+		return null;
 	}
 	
-	public Map<String, Map<String,String>> getAllServices() {
-		Map<String, Map<String,String>> allServices = new HashMap<>();
-		allServices.put(Constants.HTTP_METHOD_TYPE_STRING.GET.toString(), requestsResponsesGET);
-		allServices.put(Constants.HTTP_METHOD_TYPE_STRING.POST.toString(), requestsResponsesPOST);
-		return allServices;
+	public List<MockServiceRequest> getAllServices() {
+		List<MockServiceRequest> requestsList = new LinkedList<>();
+		requestsList.addAll(requestsResponsesPOST.values());
+		requestsList.addAll(requestsResponsesGET.values());
+		return requestsList;
 	}
 	
-	public boolean deleteService(String url, String method) throws Exception {
-		try{
-			String value = null;
-			switch(method) {
-			case "POST":
-				value = requestsResponsesPOST.remove(url);
-				break;
-			case "GET":
-				value = requestsResponsesGET.remove(url);
-				break;
-				default:
-					throw new Exception("Method not allowed");
-			}
-			if(value == null) {
-				throw new Exception("No service exists");
-			}
-			return true;
-		}catch(Exception e) {
-			throw e;
+	public void deleteService(String path, String method) throws Exception {
+		switch(method) {
+		case "POST":
+			requestsResponsesPOST.remove(path);
+			break;
+		case "GET":
+			requestsResponsesGET.remove(path);
+			break;
 		}
 	}
 }

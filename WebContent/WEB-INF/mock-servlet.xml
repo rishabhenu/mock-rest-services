@@ -15,7 +15,7 @@
 
 	<context:annotation-config />
 	<context:component-scan
-		base-package="com.mockservices.resources">
+		base-package="com.mockservices">
 	</context:component-scan>
 	
 	<!-- <bean id="propertyConfigurerBase"  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -37,9 +37,6 @@
 
 	<bean id="mockServicesMainController"
 		class="com.mockservices.controllers.MockServicesMainController" />
-
-	<bean id="mockServicesAdaptor"
-		class="com.mockservices.services.MockServicesAdaptor" />
 		
 	<mvc:annotation-driven>
 		<!-- <mvc:message-converters>
