@@ -5,12 +5,12 @@
 	<properties>
 		<jackson-version>2.9.8</jackson-version>
 		<spring-version>4.2.3.RELEASE</spring-version>
-		<projectVersion>1.0</projectVersion>
+		<projectVersion>${version}</projectVersion>
 	</properties>
 	
 	<groupId>MOCKSERVICES.mockservices</groupId>
 	<artifactId>mock-services</artifactId>
-	<version>1.0</version>
+	<version>${projectVersion}</version>
 	<packaging>war</packaging>
 	
 	<build>
