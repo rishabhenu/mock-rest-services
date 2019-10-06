@@ -46,18 +46,18 @@ window.listApis = Vue.component('listApis', {
         },
     },
     methods : {
-    	createService : function(){
-    		if( ! this.apiRequest.path ){
+    	createService : function(service){
+    		if( ! service.path ){
     			alert("Please add some Path.")
     			return;
-    		}else if( this.apiRequest.path[0] == '/' ){
-    			this.apiRequest.path = this.apiRequest.path.substring(1);
+    		}else if( service.path[0] == '/' ){
+    			service.path = service.path.substring(1);
     		}
     		let flag = false;
     		let repeatedIndex = -1;
-    		this.apisList.forEach((service, index)=>{
-    			if(service.path == this.apiRequest.path && service.headers.method == this.apiRequest.headers.method){
-    				if(!confirm('This service exists already with name '+service.name+'. Would you like to modify?')){
+    		this.apisList.forEach((api, index)=>{
+    			if(service.path == api.path && api.headers.method == service.headers.method){
+    				if(!confirm('This service exists already with name '+api.name+'. Would you like to modify?')){
     					flag = true;
     				}else{
     					repeatedIndex = index;
@@ -68,19 +68,15 @@ window.listApis = Vue.component('listApis', {
     		if(flag){
     			return;
     		}
-    		if( ! this.apiRequest.name ){
-    			this.apiRequest.name = 'Example API';
+    		if( ! service.name ){
+    			service.name = 'Example API';
     		}
-    		this.apiRequest.url = this.serviceUrl;
+    		service.url = this.serviceUrl;
     		if(repeatedIndex >= 0){
     			this.apisList.splice(repeatedIndex,1);
     		}
-    		let serviceClone = {};
-     		for(let prop in this.apiRequest){
-      			serviceClone[prop] = this.apiRequest[prop];
-      		}
-     		this.apisList.push(serviceClone);
-       		axios.post(window.createServiceUrl, this.apiRequest).then((response)=>{
+     		this.apisList.push(JSON.parse(JSON.stringify(service)));
+       		axios.post(window.createServiceUrl, service).then((response)=>{
        			console.log(response);
        		}).catch((error)=>{
        			console.log(error);
@@ -182,7 +178,7 @@ window.listApis = Vue.component('listApis', {
 				</div>
 				<textarea class='col-12 clear input-body' v-model='apiRequest.body'></textarea>
 				<div class='row clear'>
-					<button @click.prevent='createService'>Submit</button>
+					<button @click.prevent='createService(apiRequest)'>Submit</button>
 					<button v-if='this.apiRequest.headers.contentType==this.createRequestSupport.contentTypes.JSON' 
 									@click.prevent='formatRequestBody'>Format JSON</button>
 				</div>
