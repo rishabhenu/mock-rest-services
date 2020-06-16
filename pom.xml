@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<properties>
 		<jackson-version>2.10.0.pr3</jackson-version>
-		<spring-version>4.2.3.RELEASE</spring-version>
+		<spring-version>5.2.7.RELEASE</spring-version>
 		<projectVersion>${version}</projectVersion>
 	</properties>
 	
