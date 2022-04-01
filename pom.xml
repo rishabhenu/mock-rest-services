@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<properties>
-		<jackson-version>2.10.0.pr3</jackson-version>
+		<jackson-version>2.12.6.1</jackson-version>
 		<spring-version>5.3.18</spring-version>
 		<projectVersion>${version}</projectVersion>
 	</properties>
